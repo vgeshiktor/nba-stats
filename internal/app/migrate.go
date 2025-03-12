@@ -8,6 +8,9 @@ import (
 
 // RunMigrations reads the SQL migration file and executes it against the database.
 func RunMigrations(db *sql.DB, schemaPath string) error {
+	cwd, _ := os.Getwd()
+	logger.Info("current folder for migration: %s", cwd)
+	logger.Info("Running migrations: %s", schemaPath)
 	schema, err := os.ReadFile(schemaPath)
 	if err != nil {
 		return err

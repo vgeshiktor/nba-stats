@@ -120,11 +120,11 @@ func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 // GetPlayer handles GET /api/v1/players/{playerId} to retrieve a player's details.
 func (h *Handler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 4 {
+	if len(parts) < 5 {
 		errors.WriteError(w, http.StatusBadRequest, "Player ID not provided")
 		return
 	}
-	playerID := parts[3]
+	playerID := parts[4]
 
 	player, err := h.PlayerService.GetPlayerByID(playerID)
 	if err != nil {

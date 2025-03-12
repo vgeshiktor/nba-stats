@@ -3,9 +3,11 @@ package service
 
 import (
 	"errors"
+
 	"github.com/vgeshiktor/nba-stats/internal/domain"
 	"github.com/vgeshiktor/nba-stats/internal/repository"
 
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 	"github.com/vgeshiktor/nba-stats/pkg/validator"
 )
 
@@ -37,5 +39,6 @@ func (s *playerService) GetPlayerByID(id string) (*domain.Player, error) {
 	if id == "" {
 		return nil, errors.New("player ID cannot be empty")
 	}
+	logger.Info("Getting player by id: %s", id)
 	return s.playerRepo.GetPlayerByID(id)
 }

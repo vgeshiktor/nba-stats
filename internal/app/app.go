@@ -86,8 +86,14 @@ func Initialize() *http.Server {
 		logger.Error("Failed to connect to the database (conn str: %v): %v", config.DBConnStr, err)
 	}
 
+	// Read schema path from environment variable (default if not set)
+	schemaPath := os.Getenv("DB_SCHEMA_PATH")
+	if schemaPath == "" {
+		schemaPath = "migrations/db_schema.sql" // Default fallback
+	}
+
 	// Run migrations to create necessary tables
-	err = RunMigrations(db, "migrations/db_schema.sql")
+	err = RunMigrations(db, schemaPath)
 	if err != nil {
 		logger.Error("Failed to run migrations: %v", err)
 	}
