@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nba-stats
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nba-stats
+  template:
+    metadata:
+      labels:
+        app: nba-stats
+    spec:
+      containers:
+        - name: nba-stats
+          image: nba-stats:latest
+          ports:
+            - containerPort: 8081
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10

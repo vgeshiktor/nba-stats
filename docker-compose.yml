@@ -1,0 +1,36 @@
+
+services:
+  app:
+    image: nba-stats:latest
+    container_name: nba-stats-app
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: "8081"
+      DATABASE_URL: "postgres://nba_user:nba_password@db:5432/nba_stats?sslmode=disable"
+    networks:
+      - nba_network
+
+  db:
+    image: postgres:15
+    container_name: nba-stats-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "nba_user"
+      POSTGRES_PASSWORD: "nba_password"
+      POSTGRES_DB: "nba_stats"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - nba_network
+
+networks:
+  nba_network:
+
+volumes:
+  db_data:
