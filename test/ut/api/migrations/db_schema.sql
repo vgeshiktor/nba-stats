@@ -1,5 +1,5 @@
 -- Drop Players table
-DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS players CASCADE;
 
 -- Create Players table
 CREATE TABLE IF NOT EXISTS players (
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS players (
 );
 
 -- Drop Teams table
-DROP TABLE IF EXISTS teams;
+DROP TABLE IF EXISTS teams CASCADE;
 
 -- Create Teams table
 CREATE TABLE IF NOT EXISTS teams (
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS teams (
 );
 
 -- Drop Games table
-DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS games CASCADE;
 
 -- Create Games table
 CREATE TABLE IF NOT EXISTS games (
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS games (
 );
 
 -- Drop PlayerGameStats table
-DROP TABLE IF EXISTS player_game_stats;
+DROP TABLE IF EXISTS player_game_stats CASCADE;
 
 -- Create PlayerGameStats table
 CREATE TABLE IF NOT EXISTS player_game_stats (

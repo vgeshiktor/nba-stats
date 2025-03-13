@@ -6,6 +6,7 @@ import (
 	"github.com/vgeshiktor/nba-stats/internal/domain"
 	"github.com/vgeshiktor/nba-stats/internal/repository"
 
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 	"github.com/vgeshiktor/nba-stats/pkg/validator"
 )
 
@@ -29,6 +30,7 @@ func (s *gameService) CreateGame(game *domain.Game) error {
 	if err := validator.ValidateGame(game); err != nil {
 		return err
 	}
+	logger.Info("creating game: %v", game)
 	return s.gameRepo.CreateGame(game)
 }
 
@@ -37,5 +39,7 @@ func (s *gameService) GetGameByID(id string) (*domain.Game, error) {
 	if id == "" {
 		return nil, errors.New("game ID cannot be empty")
 	}
+
+	logger.Info("Get game by id: %v", id)
 	return s.gameRepo.GetGameByID(id)
 }

@@ -31,6 +31,7 @@ func (s *playerService) CreatePlayer(player *domain.Player) error {
 	if err := validator.ValidatePlayer(player); err != nil {
 		return err
 	}
+	logger.Info("creating player: %v", player)
 	return s.playerRepo.CreatePlayer(player)
 }
 

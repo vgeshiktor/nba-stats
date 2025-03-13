@@ -6,6 +6,7 @@ import (
 	"github.com/vgeshiktor/nba-stats/internal/domain"
 	"github.com/vgeshiktor/nba-stats/internal/repository"
 
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 	"github.com/vgeshiktor/nba-stats/pkg/validator"
 )
 
@@ -36,6 +37,8 @@ func (s *playerStatsService) LogPlayerStats(stats *domain.PlayerGameStats) error
 	if err := validator.ValidatePlayerStats(stats); err != nil {
 		return err
 	}
+
+	logger.Info("Log player stats by id: %s", stats.PlayerID)
 
 	// Ensure player exists
 	_, err := s.playerRepo.GetPlayerByID(stats.PlayerID)

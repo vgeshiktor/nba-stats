@@ -7,6 +7,7 @@ import (
 	"github.com/vgeshiktor/nba-stats/internal/repository"
 
 	"github.com/vgeshiktor/nba-stats/pkg/validator"
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 )
 
 // TeamService defines the methods related to team management.
@@ -26,9 +27,10 @@ func NewTeamService(teamRepo repository.TeamRepository) TeamService {
 
 // CreateTeam validates and inserts a new team into the database.
 func (s *teamService) CreateTeam(team *domain.Team) error {
-		if err := validator.ValidateTeam(team); err != nil {
+	if err := validator.ValidateTeam(team); err != nil {
 		return err
 	}
+
 	return s.teamRepo.CreateTeam(team)
 }
 
@@ -37,5 +39,7 @@ func (s *teamService) GetTeamByID(id string) (*domain.Team, error) {
 	if id == "" {
 		return nil, errors.New("team ID cannot be empty")
 	}
+	logger.Info("Getting team by id: %s", id)
+
 	return s.teamRepo.GetTeamByID(id)
 }

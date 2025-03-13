@@ -13,8 +13,14 @@ import (
 // NewDB establishes a database connection using the provided connection string
 // and applies connection pool settings.
 func NewDB(connStr string, maxOpenConns, maxIdleConns int, connMaxLifetime time.Duration) (*sql.DB, error) {
-	// Open a new connection to the PostgreSQL database.
-	db, err := sql.Open("postgres", connStr)
+	var driverName string
+	if connStr == ":memory:" {
+		driverName = "sqlite3"
+	} else {
+		driverName = "postgres"
+	}
+
+	db, err := sql.Open(driverName, connStr)
 	if err != nil {
 		return nil, err
 	}
@@ -24,11 +30,12 @@ func NewDB(connStr string, maxOpenConns, maxIdleConns int, connMaxLifetime time.
 		return nil, err
 	}
 
-	// Set connection pool parameters
+	// Set connection pool parameters.
 	db.SetMaxOpenConns(maxOpenConns)
 	db.SetMaxIdleConns(maxIdleConns)
 	db.SetConnMaxLifetime(connMaxLifetime)
 
-	logger.Info("Database connection pool established (MaxOpenConns: %d, MaxIdleConns: %d, ConnMaxLifetime: %s)", maxOpenConns, maxIdleConns, connMaxLifetime)
+	logger.Info("Database connection pool established (MaxOpenConns: %d, MaxIdleConns: %d, ConnMaxLifetime: %s)",
+		maxOpenConns, maxIdleConns, connMaxLifetime)
 	return db, nil
 }

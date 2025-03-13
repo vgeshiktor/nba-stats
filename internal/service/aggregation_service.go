@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/vgeshiktor/nba-stats/internal/domain"
 	"github.com/vgeshiktor/nba-stats/internal/repository"
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 )
 
 // AggregationService defines operations for retrieving aggregate statistics.
@@ -27,6 +28,7 @@ func (s *aggregationService) GetPlayerAggregate(playerID string) (*domain.Aggreg
 	if playerID == "" {
 		return nil, errors.New("player ID cannot be empty")
 	}
+	logger.Info("Fetching player aggregate by id: %s", playerID)
 	return s.statsRepo.FetchPlayerAggregate(playerID)
 }
 
@@ -35,5 +37,6 @@ func (s *aggregationService) GetTeamAggregate(teamID string) (*domain.AggregateS
 	if teamID == "" {
 		return nil, errors.New("team ID cannot be empty")
 	}
+	logger.Info("Fetching team aggregate by id: %s",  teamID)
 	return s.statsRepo.FetchTeamAggregate(teamID)
 }
