@@ -27,7 +27,7 @@ type Game struct {
 }
 
 // PlayerGameStats holds the statistics for a player in a specific game.
-type PlayerGameStats struct {
+type 	PlayerGameStats struct {
 	ID            string  `json:"id,omitempty"` // Unique identifier for the stats record (optional).
 	PlayerID      string  `json:"player_id"`    // Identifier of the player.
 	GameID        string  `json:"game_id"`      // Identifier of the game.

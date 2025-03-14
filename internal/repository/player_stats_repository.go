@@ -3,6 +3,7 @@ package repository
 
 import (
 	"database/sql"
+
 	"github.com/vgeshiktor/nba-stats/internal/domain"
 )
 
@@ -38,7 +39,7 @@ func (r *playerStatsRepo) InsertPlayerStats(stats *domain.PlayerGameStats) error
 func (r *playerStatsRepo) FetchPlayerAggregate(playerID string) (*domain.AggregateStats, error) {
 	query := `
 		SELECT 
-			COUNT(*) as games_played,
+			COUNT(DISTINCT game_id) as games_played,
 			SUM(points) as total_points,
 			SUM(rebounds) as total_rebounds,
 			SUM(assists) as total_assists,
@@ -76,7 +77,7 @@ func (r *playerStatsRepo) FetchPlayerAggregate(playerID string) (*domain.Aggrega
 func (r *playerStatsRepo) FetchTeamAggregate(teamID string) (*domain.AggregateStats, error) {
 	query := `
 		SELECT 
-			COUNT(*) as games_played,
+			COUNT(DISTINCT game_id) as games_played,
 			SUM(ps.points) as total_points,
 			SUM(ps.rebounds) as total_rebounds,
 			SUM(ps.assists) as total_assists,

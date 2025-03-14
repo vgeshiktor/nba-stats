@@ -10,6 +10,7 @@ import (
 	"github.com/vgeshiktor/nba-stats/internal/service"
 
 	"github.com/vgeshiktor/nba-stats/pkg/errors"
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 )
 
 // Handler aggregates all service dependencies for handling API requests.
@@ -70,6 +71,8 @@ func (h *Handler) GetPlayerAggregate(w http.ResponseWriter, r *http.Request) {
 	}
 	playerID := parts[5]
 
+	logger.Info("get player aggreggate for id:  %s", playerID)
+
 	aggregate, err := h.AggregationService.GetPlayerAggregate(playerID)
 	if err != nil {
 		errors.WriteError(w, http.StatusInternalServerError, "Error fetching player aggregate: "+err.Error())
@@ -83,11 +86,13 @@ func (h *Handler) GetPlayerAggregate(w http.ResponseWriter, r *http.Request) {
 // GetTeamAggregate handles GET /api/v1/player-stats/team/{teamId} to fetch team aggregates.
 func (h *Handler) GetTeamAggregate(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 5 {
+	if len(parts) < 6 {
 		errors.WriteError(w, http.StatusBadRequest, "Team ID not provided")
 		return
 	}
-	teamID := parts[4]
+	teamID := parts[5]
+
+	logger.Info("get team aggreggate for id:  %s", teamID)
 
 	aggregate, err := h.AggregationService.GetTeamAggregate(teamID)
 	if err != nil {
@@ -157,11 +162,11 @@ func (h *Handler) CreateTeam(w http.ResponseWriter, r *http.Request) {
 // GetTeam handles GET /api/v1/teams/{teamId} to retrieve team details.
 func (h *Handler) GetTeam(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 4 {
+	if len(parts) < 5 {
 		errors.WriteError(w, http.StatusBadRequest, "Team ID not provided")
 		return
 	}
-	teamID := parts[3]
+	teamID := parts[4]
 
 	team, err := h.TeamService.GetTeamByID(teamID)
 	if err != nil {
@@ -194,11 +199,11 @@ func (h *Handler) CreateGame(w http.ResponseWriter, r *http.Request) {
 // GetGame handles GET /api/v1/games/{gameId} to retrieve game details.
 func (h *Handler) GetGame(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) < 4 {
+	if len(parts) < 5 {
 		errors.WriteError(w, http.StatusBadRequest, "Game ID not provided")
 		return
 	}
-	gameID := parts[3]
+	gameID := parts[4]
 
 	game, err := h.GameService.GetGameByID(gameID)
 	if err != nil {
