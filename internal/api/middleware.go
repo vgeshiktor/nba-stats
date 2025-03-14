@@ -3,10 +3,11 @@ package api
 
 import (
 	"context"
-	"github.com/vgeshiktor/nba-stats/pkg/logger"
-	"github.com/vgeshiktor/nba-stats/pkg/errors"
 	"net/http"
 	"time"
+
+	"github.com/vgeshiktor/nba-stats/pkg/errors"
+	"github.com/vgeshiktor/nba-stats/pkg/logger"
 
 	"github.com/google/uuid"
 )
@@ -32,11 +33,13 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 // AuthenticationMiddleware checks for the presence of an Authorization header.
 func AuthenticationMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger.Info("checking authentication...")
 		// Simple authentication: verify that the Authorization header is set.
 		if r.Header.Get("Authorization") == "" {
 			errors.WriteError(w, http.StatusUnauthorized, "Unauthorized: missing token")
 			return
 		}
+		logger.Info("Authentication successful")
 		// In a real-world scenario, add token validation logic here.
 		next.ServeHTTP(w, r)
 	})

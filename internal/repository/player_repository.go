@@ -28,6 +28,11 @@ func (r *playerRepo) CreatePlayer(player *domain.Player) error {
 	query := `INSERT INTO players (id, name, team_id) VALUES ($1, $2, $3)`
 	logger.Info("Running query: %s", query)
 	_, err := r.db.Exec(query, player.ID, player.Name, player.TeamID)
+	if err != nil {
+		logger.Error("Failed to insert player %v to the db",  player)
+	} else {
+		logger.Info("Successfully created player %v", player)
+	}
 	return err
 }
 

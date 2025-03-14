@@ -3,12 +3,13 @@ package api
 
 import (
 	"encoding/json"
+	errs "errors"
+	"database/sql"
 	"net/http"
 	"strings"
 
 	"github.com/vgeshiktor/nba-stats/internal/domain"
 	"github.com/vgeshiktor/nba-stats/internal/service"
-
 	"github.com/vgeshiktor/nba-stats/pkg/errors"
 	"github.com/vgeshiktor/nba-stats/pkg/logger"
 )
@@ -107,11 +108,14 @@ func (h *Handler) GetTeamAggregate(w http.ResponseWriter, r *http.Request) {
 // CreatePlayer handles POST /api/v1/players to create a new player.
 func (h *Handler) CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	var player domain.Player
+	logger.Info("Received body: %v", r.Body)
 	if err := json.NewDecoder(r.Body).Decode(&player); err != nil {
 		errors.WriteError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
+
+	logger.Info("Trying to  create player: %v", player)
 
 	if err := h.PlayerService.CreatePlayer(&player); err != nil {
 		errors.WriteError(w, http.StatusInternalServerError, "Error creating player: "+err.Error())
@@ -133,6 +137,12 @@ func (h *Handler) GetPlayer(w http.ResponseWriter, r *http.Request) {
 
 	player, err := h.PlayerService.GetPlayerByID(playerID)
 	if err != nil {
+		// Check if the error is due to the record not being found.
+		if errs.Is(err, sql.ErrNoRows) || strings.Contains(err.Error(), "not found") {
+			http.Error(w, "Player not found", http.StatusNotFound)
+			return
+		}
+
 		errors.WriteError(w, http.StatusInternalServerError, "Error fetching player: "+err.Error())
 		return
 	}
